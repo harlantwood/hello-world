@@ -1,12 +1,12 @@
-name: CI
 on: push
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [macos-latest, ubuntu-latest]
         node-version: [14.x]
 
     steps:
@@ -19,10 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Configure Nix substituters
-        run: |
-          set -xe
-          mkdir -p ~/.config/nix/
-          cp ./.github/nix.conf ~/.config/nix/
+        run: mkdir -p ~/.config/nix && cp ./.github/nix.conf ~/.config/nix/
       - name: Prepare Nix environment
         run: nix-shell --command "echo Completed"
       - name: Run all tests

@@ -6,7 +6,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        # os: [macos-latest, ubuntu-latest]
+        os: [ubuntu-latest]
         node-version: [14.x]
 
     steps:
@@ -23,5 +24,6 @@ jobs:
         run: mkdir -p ~/.config/nix && cp ./.github/nix.conf ~/.config/nix/
       - name: Prepare Nix environment
         run: nix-shell --command "echo Completed"
-      - name: Run all tests
-        run: nix-shell --run 'cd tests && npm install && npm test'
+      - run: nix-shell --run 'cd tests && npm install'
+      - run: nix-shell --run 'cd tests && npm run test:setup'
+      - run: nix-shell --run 'cd tests && npm run test:exec'
